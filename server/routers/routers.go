@@ -84,6 +84,7 @@ func ScheduleNewMeetings(c *gin.Context) {
 	//
 	participants := strings.Split(form.Participants, ",")
 	fmt.Println("participants----", participants)
+	fmt.Println("form----", form)
 	//select the not availble participants
 	//
 	// example, if new meeting is going to schedule 1 to 2
@@ -93,7 +94,7 @@ func ScheduleNewMeetings(c *gin.Context) {
 	// 						OR
 	//  - start time > new end time and endtime >= new end time
 
-	layout := "2006-01-02T15:04:05"
+	layout := "2006-01-02T15:04"
 	// date_only_layout := "2006-01-02"
 	start_time_unix, err := time.Parse(layout, form.StartTime)
 

@@ -163,7 +163,7 @@ $(document).ready(function(){
             html += '</div>\
                         </td>\
                         <td>\
-                        '+new Date(val.start_time*1000).toLocaleString()+' - '+new Date((val.end_time*1000)).toLocaleString()+'\
+                        '+DateFormat(new Date(val.start_time*1000))+' - '+DateFormat(new Date((val.end_time*1000)))+'\
                         </td>\
                     </tr>'
         })
@@ -260,4 +260,20 @@ $(document).ready(function(){
         Cookies.set("access_token","")
         window.location = '/'
     })
+
+    function DateFormat(currentdate){
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+
+        var datetime = monthNames[currentdate.getMonth()] + " "
+                + (currentdate.getDate())  + " " 
+                + currentdate.getFullYear() + " "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+        return datetime;
+    }
+    
 })

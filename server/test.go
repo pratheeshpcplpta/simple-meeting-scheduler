@@ -13,7 +13,12 @@ import (
 
 func main() {
 	// TestEncrypDecryp()
-	Test()
+	// Test()
+	Test2()
+}
+func Test2() {
+	time := time.Now()
+	fmt.Println(time.Zone())
 }
 func TestEncrypDecryp() {
 	enc := helper.AES_Encrypt("test", "login")
