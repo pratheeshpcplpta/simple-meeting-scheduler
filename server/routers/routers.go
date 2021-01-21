@@ -90,7 +90,7 @@ func ScheduleNewMeetings(c *gin.Context) {
 //
 
 func UpcomingMeetings(c *gin.Context) {
-	result := map[string]interface{}{}
+	result := []map[string]interface{}{}
 
 	db := database.InitConnection()
 	db.Raw("SELECT * FROM meeting_schedules JOIN users ON meeting_schedules.hosted_by = users.id").Find(&result)
