@@ -12,6 +12,8 @@ import (
 	"time"
 
 	helmet "github.com/danielkov/gin-helmet"
+	gintemplate "github.com/foolin/gin-template"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/pratheeshpcplpta/simple-meeting-scheduler/database"
 	"github.com/pratheeshpcplpta/simple-meeting-scheduler/routers"
@@ -83,6 +85,19 @@ func Server() {
 	//
 	// Use middlewares
 	//
+
+	//
+	// Template
+	//
+
+	//new template engine
+	router.HTMLRender = gintemplate.New(gintemplate.TemplateConfig{
+		Root:         "../app",
+		Extension:    ".tpl",
+		Master:       "layouts/master",
+		DisableCache: true,
+	})
+	router.Use(static.Serve("/assets", static.LocalFile("../app/assets", false)))
 
 	srv := &http.Server{
 		Addr:    ":9091",

@@ -11,13 +11,13 @@ type MeetingSchedulesRequest struct {
 	Description  string
 	StartTime    string
 	EndTime      string
-	Participants []string
+	Participants string
 }
 
 type Response struct {
-	Status  string
-	Message string
-	Data    interface{}
+	Status  string      `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 //
@@ -36,6 +36,7 @@ type Users struct {
 // meeting schedules
 type MeetingSchedules struct {
 	ID           uint `gorm:"primaryKey"`
+	MeetingId    string
 	Title        string
 	Description  string
 	StartTime    uint32
@@ -47,11 +48,11 @@ type MeetingSchedules struct {
 
 // User meetings
 type UserMeetings struct {
-	ID uint `gorm:"primaryKey"`
+	ID int `gorm:"primaryKey"`
 
-	Uid  uint
+	Uid  int
 	User Users `gorm:"foreignKey:Uid"`
 
-	Mid      uint
+	Mid      int
 	Meetings MeetingSchedules `gorm:"foreignKey:Mid"`
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pratheeshpcplpta/simple-meeting-scheduler/models"
 )
 
 var IgnoreMethods = []string{"GET", "HEAD", "OPTIONS"}
@@ -60,15 +61,19 @@ func validate(params APIValidator) (status bool, err error) {
 func APIMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		fmt.Println("withinnn")
 		if InArray(IgnoreMethods, c.Request.Method) {
 			c.Next()
 			return
 		}
 
 		apiParams := LoadAPIParams(c)
-		if ok, err := validate(apiParams); !ok {
-			panic(fmt.Sprintf("API validation mismatch : %v", err))
+		if ok, _ := validate(apiParams); !ok {
+			c.JSON(400, models.Response{
+				Status:  "error",
+				Message: "API authentication failed",
+				Data:    "",
+			})
+			c.Abort()
 			return
 		}
 		c.Next()
