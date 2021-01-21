@@ -58,8 +58,8 @@
                 <span class="nav-link-text">Dashboard</span>
               </a>
             </li>
+            <a class="nav-link logout" href="#">
             <li class="nav-item">
-              <a class="nav-link logout" href="#">
                 <i class="ni ni-key-25 text-info"></i>
                 <span class="nav-link-text">Logout</span>
               </a>
@@ -216,13 +216,13 @@
 
           <div class="form-group">
             <label for="meeting__starttime" class="form-control-label">Start time</label>
-            <input class="form-control field-schedule--starttime" type="datetime-local" value="2018-11-23T10:30:00" id="meeting__starttime">
+            <input class="form-control field-schedule--starttime" type="datetime-local" value="" id="meeting__starttime">
           </div>
           
 
           <div class="form-group">
             <label for="meeting__starttime" class="form-control-label">End time</label>
-            <input class="form-control field-schedule--endtime" type="datetime-local" value="2018-11-23T10:30:00" id="meeting__starttime">
+            <input class="form-control field-schedule--endtime" type="datetime-local" value="" id="meeting__starttime">
           </div>
 
           <div class="form-group error-display" style="color:red">

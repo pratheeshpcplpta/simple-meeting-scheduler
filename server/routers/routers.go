@@ -192,6 +192,7 @@ func ScheduleNewMeetings(c *gin.Context) {
 //
 func UpcomingMeetings(c *gin.Context) {
 	result := []map[string]interface{}{}
+	meeting__details := make(map[string]map[string]interface{})
 
 	db := database.InitConnection()
 
@@ -207,10 +208,41 @@ func UpcomingMeetings(c *gin.Context) {
 			Where("meeting_schedules.start_time >= ?", time.Now().Unix()).
 			Find(&result)
 
+		list__mids := []string{}
+		for _, _item := range result {
+			str__id := strconv.Itoa(int(_item["id"].(uint)))
+			list__mids = append(list__mids, str__id)
+
+			meeting__details[str__id] = make(map[string]interface{}, 0)
+			meeting__details[str__id] = _item
+		}
+
+		mid__participants := []map[string]interface{}{}
+		db.
+			Select([]string{
+				"users.id,users.username,user_meetings.mid",
+			}).
+			Model(&models.UserMeetings{}).
+			Joins("JOIN users on user_meetings.uid=users.id").
+			Where("user_meetings.mid IN (" + strings.Join(list__mids, ",") + ")").
+			Find(&mid__participants)
+
+		for _, _item := range mid__participants {
+			key := strconv.Itoa(_item["mid"].(int))
+			if meeting__details[key]["participants"] == nil {
+				meeting__details[key]["participants"] = make(map[string]string, 0)
+			}
+			existing := meeting__details[key]["participants"].(map[string]string)
+
+			uid := strconv.Itoa(_item["id"].(int))
+			existing[uid] = _item["username"].(string)
+			meeting__details[key]["participants"] = existing
+		}
+
 		c.JSON(http.StatusOK, models.Response{
 			Status:  "success",
 			Message: "",
-			Data:    result,
+			Data:    meeting__details,
 		})
 	}
 
@@ -221,13 +253,16 @@ func UpcomingMeetings(c *gin.Context) {
 //
 func RecentMeetings(c *gin.Context) {
 	result := []map[string]interface{}{}
+	meeting__details := make(map[string]map[string]interface{})
 
 	db := database.InitConnection()
 
 	user, _ := c.Get("user")
 	if user.(models.Users).ID > 0 {
 		db.
-			Select([]string{"meeting_schedules.*"}).
+			Select([]string{
+				"meeting_schedules.*",
+			}).
 			Model(&models.MeetingSchedules{}).
 			Joins("JOIN user_meetings on user_meetings.mid=meeting_schedules.id").
 			Where(map[string]interface{}{
@@ -236,10 +271,46 @@ func RecentMeetings(c *gin.Context) {
 			Where("meeting_schedules.start_time < ?", time.Now().Unix()).
 			Find(&result)
 
+		list__mids := []string{}
+		for _, _item := range result {
+			str__id := strconv.Itoa(int(_item["id"].(uint)))
+			list__mids = append(list__mids, str__id)
+
+			meeting__details[str__id] = make(map[string]interface{}, 0)
+			meeting__details[str__id] = _item
+		}
+
+		mid__participants := []map[string]interface{}{}
+		db.
+			Select([]string{
+				"users.id,users.username,user_meetings.mid",
+			}).
+			Model(&models.UserMeetings{}).
+			Joins("JOIN users on user_meetings.uid=users.id").
+			Where("user_meetings.mid IN (" + strings.Join(list__mids, ",") + ")").
+			Find(&mid__participants)
+
+		for _, _item := range mid__participants {
+			key := strconv.Itoa(_item["mid"].(int))
+			if meeting__details[key]["participants"] == nil {
+				meeting__details[key]["participants"] = make(map[string]string, 0)
+			}
+
+			existing := meeting__details[key]["participants"].(map[string]string)
+
+			uid := strconv.Itoa(_item["id"].(int))
+			existing[uid] = _item["username"].(string)
+			meeting__details[key]["participants"] = existing
+
+		}
+
+		//
+		// Get the
+		//
 		c.JSON(http.StatusOK, models.Response{
 			Status:  "success",
 			Message: "",
-			Data:    result,
+			Data:    meeting__details,
 		})
 	}
 

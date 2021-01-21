@@ -78,9 +78,13 @@ $(document).ready(function(){
 
         $.ajax(settings).done(function (response) {
             data = JSON.parse(response)
+            console.log(data)
             if (data.status == "success") {
                 let html_tag = template__meetings(data.data)
                 $(".upcoming-meetings .upcoming-meetings--table").html(html_tag)
+
+                var $tooltip = $('[data-toggle="tooltip"]');
+                $tooltip.tooltip();
             }
 
             if (data.status == "error") {
@@ -116,6 +120,10 @@ $(document).ready(function(){
             if (data.status == "success") {
                 let html_tag = template__meetings(data.data)
                 $(".recent-meetings .recent-meetings--table").html(html_tag)
+
+                var $tooltip = $('[data-toggle="tooltip"]');
+                $tooltip.tooltip();
+
             }
 
             if (data.status == "error") {
@@ -143,19 +151,16 @@ $(document).ready(function(){
                         </td>\
                         <td>\
                         <div class="avatar-group">\
-                            <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="Ryan Tompson">\
+                        '
+                        
+            $.each(val.participants, function(id,username){
+                html += '\
+                            <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="'+username+'">\
                             <img alt="Image placeholder" src="assets/img/user.png">\
                             </a>\
-                            <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="Romina Hadid">\
-                            <img alt="Image placeholder" src="assets/img/user.png">\
-                            </a>\
-                            <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="Alexander Smith">\
-                            <img alt="Image placeholder" src="assets/img/user.png">\
-                            </a>\
-                            <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="Jessica Doe">\
-                            <img alt="Image placeholder" src="assets/img/user.png">\
-                            </a>\
-                        </div>\
+                '
+            })
+            html += '</div>\
                         </td>\
                         <td>\
                         '+new Date(val.start_time*1000).toLocaleString()+' - '+new Date((val.end_time*1000)).toLocaleString()+'\
@@ -163,12 +168,9 @@ $(document).ready(function(){
                     </tr>'
         })
 
+       
         return html
     }
-
-
-
-
     // 
     // List users
     // 
@@ -219,10 +221,10 @@ $(document).ready(function(){
         form.append("Participants", $(".field-schedule--participants").val());
 
         startTime = new Date($(".field-schedule--starttime").val())
-        endTime = new Date($(".field-schedule--starttime").val())
+        endTime = new Date($(".field-schedule--endtime").val())
 
         if(startTime >= endTime){
-            $(".error-display").html("Start tim should be less than end time")
+            $(".error-display").html("Start time should be less than end time")
             $(".error-display").show()
             return
         }
