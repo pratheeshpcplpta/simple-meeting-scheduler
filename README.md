@@ -1,1 +1,3 @@
 # simple-meeting-scheduler
+
+## Installation
